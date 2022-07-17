@@ -8,7 +8,7 @@
 
 
 
-代码仅用于学习
+项目使用宽松MIT协议分发,鼓励用于学习等用途
 
 由于本人拙劣的代码水平,各位大神看官笑笑就好=.=
 
@@ -23,3 +23,4 @@
 4.[DuiLib_Ultimate](https://github.com/qdtroy/DuiLib_Ultimate)
 
 5.[pthreads](https://sourceware.org/pthreads-win32/)
+
