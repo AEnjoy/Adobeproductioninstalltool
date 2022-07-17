@@ -1,0 +1,15 @@
+{
+    "file_format_version" : "1.0.0",
+    "versionlist":{
+    "leastversion":"23.0.1"
+    },
+    "23.0.1": {
+		"file_format_version" : "1.0.0",
+        "url": "http://127.0.0.1/Photoshop2021.7z",
+        "savename":"Photoshop2021.7z",
+        "md5":"3DA000997A627E2481B5BF70C427991E",
+        "password":"",
+        "execname":"!)绿化处理.bat",
+        "api_version": "1.1"
+    }
+}
