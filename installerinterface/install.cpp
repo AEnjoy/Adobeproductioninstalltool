@@ -25,7 +25,47 @@ string WCharToMByte(LPCWSTR lpcwszStr)
     delete[] lpszStr;
     return str;
 }
+wstring UTF8ToUnicode(const char* strSrc)
+{
+    std::wstring wstrRet;
 
+    if (NULL != strSrc)
+    {
+        int len = MultiByteToWideChar(CP_UTF8, 0, strSrc, -1, NULL, 0) * sizeof(WCHAR);
+        WCHAR* strDst = new(std::nothrow) WCHAR[len + 1];
+        if (NULL != strDst)
+        {
+            MultiByteToWideChar(CP_UTF8, 0, strSrc, -1, strDst, len);
+            wstrRet = strDst;;
+            delete[]strDst;
+        }
+    }
+
+    return wstrRet;
+}
+string UnicodeToAnsi(const WCHAR* strSrc)
+{
+    string strRet;
+
+    if (NULL != strSrc)
+    {
+        int len = WideCharToMultiByte(CP_ACP, 0, strSrc, -1, NULL, 0, NULL, NULL);
+        char* strDst = new(std::nothrow) char[len + 1];
+        if (NULL != strDst)
+        {
+            WideCharToMultiByte(CP_ACP, 0, strSrc, -1, strDst, len, NULL, NULL);
+            strRet = strDst;
+            delete[]strDst;
+        }
+    }
+
+    return strRet;
+}
+
+string UTF8ToAnsi(const char* strSrc)
+{
+    return UnicodeToAnsi(UTF8ToUnicode(strSrc).c_str());
+}
 void _parserjsonfile(iinfo *&a,const char* filename) {
     //https://blog.csdn.net/normallife/article/details/52661632
     //string c = "..//";c=c + filename;
@@ -46,8 +86,10 @@ void _parserjsonfile(iinfo *&a,const char* filename) {
     a->md5 = CT2A(t.GetString());
     GetPrivateProfileStringW(v, L"password", L"", t.GetBuffer(MAX_PATH), MAX_PATH, f);
     a->password = CT2A(t.GetString());
-    GetPrivateProfileStringW(v, L"execname", L"", t.GetBuffer(MAX_PATH), MAX_PATH, f);
-    a->execname = CT2A(t.GetString());
+    {
+        GetPrivateProfileStringW(v, L"execname", L"", t.GetBuffer(MAX_PATH), MAX_PATH, f);
+        a->execname = UTF8ToAnsi(CT2A(t.GetString()));
+    }
     GetPrivateProfileStringW(v, L"api_version", L"", t.GetBuffer(MAX_PATH), MAX_PATH, f);
     a->api_version = CT2A(t.GetString());
     a->zipspace = GetPrivateProfileIntW(v, L"zip", 0, f);

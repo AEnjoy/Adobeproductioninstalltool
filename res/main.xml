@@ -34,8 +34,8 @@
 					<!--WndE name="readme" width="493" float="true" height="378" maxchar="1500" wordbreak="true" font="1" pos="4,25,497,403" leftbordersize="1" topbordersize="1" rightbordersize="1" bottombordersize="1" borderstyle="1" resourcetext="true" menu="true" /																																																																																					-->
 					<Label text="当前安装的版本:" width="140" height="22" font="1" textcolor="0xFFFFFFFF" pos="153,52,293,74" float="true" />
 					<Label name="nowver" text="1.0" width="102" height="29" font="1" textcolor="0xFF00FFFF" pos="288,51,390,80" float="true" />
-					<Label text="云端版本:" width="130" height="24" font="1" textcolor="0xFFFFFFFF" pos="152,88,282,112" float="true" />
-					<Label name="pver" text="1.0" width="41" height="24" font="1" textcolor="0xFF00FFFF" pos="288,87,329,111" float="true" />
+					<Label text="云端版本:" width="130" height="24" font="1" textcolor="0xFFFFFFFF" pos="152,88,282,116" float="true" />
+					<Label name="pver" text="1.0" width="102" height="29" font="1" textcolor="0xFF00FFFF" pos="288,87,390,111" float="true" />
 					<Button name="checkp" width="123" height="23" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" selectedtextcolor="0xFFC0DCC0" selectedfont="1" selectedbordercolor="0xFFA6CAF0" selected="true" text="检查云端版本" font="1" pos="153,124,276,147" float="true" />
 					<CheckBox name="usev" width="24" height="24" selectedtextcolor="0xFFFFFBF0" selectedfont="1" group="use" float="true" pos="344,53,368,77" normalimage="noselect.png" selectedimage="select.png" selected="true" />
 					<CheckBox name="usev" width="24" height="24" selectedtextcolor="0xFFFFFBF0" selectedfont="1" group="use" pos="344,86,368,110" normalimage="noselect.png" selectedimage="select.png" float="true" />

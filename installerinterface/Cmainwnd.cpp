@@ -164,6 +164,7 @@ if( downLoad(1,purl,"file.ini"))
 }
 else {
 	MessageBoxA(GetHWND(), "获取云端版本失败!", "Error:", MB_ICONERROR);
+	return;
 }
 #else 
 			_parserjsonfile(i_, "\\file.ini");
@@ -172,9 +173,9 @@ else {
 			CString s = i_->ver.c_str();
 			pver->SetText(s);
 			MessageBoxW(NULL,L"最新版本:\n"+s,L"操作完成", 0);
-			string s1 = to_string(float(i_->needspace / 1024/1024)) + "GB";
-			CString nt = s1.c_str();
-			needspace->SetText(nt);
+			char t5[30];
+			sprintf(t5, "%0.2f GB", float(i_->needspace / static_cast<double>(1024) / 1024));
+			needspace->SetText(CString(t5));
 		}
 		if (msg.pSender->GetName() == _T("next2"))//下一步安装
 		{
