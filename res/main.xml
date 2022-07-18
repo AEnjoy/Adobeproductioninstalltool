@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<Window size="500,467" caption="0,0,0,30">
+	<Font shared="true" id="1" name="微软雅黑" size="18" />
+	<VerticalLayout width="616" height="431" pos="0,0,616,431" bkcolor="0xFF323232" bkcolor2="0xFF323232">
+		<HorizontalLayout height="32" bkcolor="0xFF535353" bkcolor2="0xFF535353">
+			<!--标题栏																																																																																																																																																																																																									-->
+			<Control pos="0,0,34,36" bkimage="2.png" height="36" width="34" />
+			<Label text="Photoshop" width="213" height="34" font="1" textcolor="0xFFFFFFFF" pos="0,0,213,34" padding="8" />
+			<VerticalLayout bkcolor="0xFF535353" bkcolor2="0xFF535353" />
+			<Control pos="0,0,300,32" width="32" height="32" bkimage="2.png" />
+			<Button name="minbtn" tooltip="最小化" float="true" pos="420,3,460,34" width="40" height="31" normalimage=" file='min.png' " hotimage=" file='min_1.png' " pushedimage=" file='min_1.png' " />
+			<Button name="closebtn" tooltip="关闭" float="true" pos="459,0,499,33" width="40" height="33" normalimage=" file='close.png' " hotimage=" file='close_1.png' " pushedimage=" file='close_1.png' " />
+			<!--VerticalLayout width="73" pos="0,0,73,0" >
+		
+			</VerticalLayout																																																																																																																																																																																																																																										-->
+		</HorizontalLayout>
+		<!--默认selectedid -1,设计阶段手动更改																																																																														-->
+		<HorizontalLayout>
+			<AnimationTabLayout name="stepTabLayout" selectedid="-1" topbordersize="1" bordercolor="#ff000000" height="447" pos="0,0,0,447">
+				<HorizontalLayout height="437" pos="0,0,0,437" bkcolor="0xFFFFFFFF">
+					<Control pos="0,0,240,388" width="240" height="388" bkimage="welcome_1.png" />
+					<Control pos="0,0,272,388" width="272" height="388" bkimage="welcome_2.png" />
+					<Button name="next1" tooltip="Next" float="true" width="38" height="35" normalimage=" file='RC.png' " pos="222,391,260,426" />
+				</HorizontalLayout>
+				<HorizontalLayout height="437" pos="0,0,0,437">
+					<Label float="true" font="1" text="----欢迎" width="111" height="26" textcolor="0xFFFFFFFF" pos="5,26,116,52" />
+					<Label float="true" font="1" text="----安装" width="111" height="26" textcolor="0xFFFFFFFF" pos="3,273,114,299" />
+					<Label float="true" font="1" text="----设置" width="111" height="26" textcolor="0xFF00FFFF" pos="4,148,115,174" />
+					<!--Edit width="491" height="366" readonly="true" wordbreak="true" font="1" pos="0,0,491,366" resourcetext="true" menu="true" /																																																																																																																																																	-->
+					<!--RichEdit width="491" height="344" vscrollbar="true" multiline="true" readonly="true" font="1" textcolor="0xFFFFFBF0" pos="0,0,491,344" /																																																																																																																																												-->
+					<Button name="next2" float="true" width="76" height="35" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="下一步→" font="1" pos="397,400,473,435" />
+					<Button name="last1" float="true" width="82" height="35" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="←上一步" font="1" pos="288,399,370,434" />
+					<!--WndE width="484" height="374" float="true" pos="5,25,489,399" /																																																																																																				-->
+					<!--WndE name="readme" width="493" float="true" height="378" maxchar="1500" wordbreak="true" font="1" pos="4,25,497,403" leftbordersize="1" topbordersize="1" rightbordersize="1" bottombordersize="1" borderstyle="1" resourcetext="true" menu="true" /																																																																																					-->
+					<Label text="当前安装的版本:" width="140" height="22" font="1" textcolor="0xFFFFFFFF" pos="153,52,293,74" float="true" />
+					<Label name="nowver" text="1.0" width="102" height="29" font="1" textcolor="0xFF00FFFF" pos="288,51,390,80" float="true" />
+					<Label text="云端版本:" width="130" height="24" font="1" textcolor="0xFFFFFFFF" pos="152,88,282,112" float="true" />
+					<Label name="pver" text="1.0" width="41" height="24" font="1" textcolor="0xFF00FFFF" pos="288,87,329,111" float="true" />
+					<Button name="checkp" width="123" height="23" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" selectedtextcolor="0xFFC0DCC0" selectedfont="1" selectedbordercolor="0xFFA6CAF0" selected="true" text="检查云端版本" font="1" pos="153,124,276,147" float="true" />
+					<CheckBox name="usev" width="24" height="24" selectedtextcolor="0xFFFFFBF0" selectedfont="1" group="use" float="true" pos="344,53,368,77" normalimage="noselect.png" selectedimage="select.png" selected="true" />
+					<CheckBox name="usev" width="24" height="24" selectedtextcolor="0xFFFFFBF0" selectedfont="1" group="use" pos="344,86,368,110" normalimage="noselect.png" selectedimage="select.png" float="true" />
+					<Label text="安装目录:" width="94" height="26" font="1" textcolor="0xFFFFFFFF" pos="136,297,230,323" float="true" />
+					<Edit name="dir" width="227" height="27" readonly="true" text="D:\Adobe\Photoshop" endellipsis="true" font="1" pos="217,299,444,326" float="true" bkcolor="0xFF666D72" />
+					<Button name="cdir" width="40" height="28" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="..." font="1" float="true" pos="445,299,485,327" />
+					<Label text="所需空间:" width="87" height="29" font="1" textcolor="0xFFFFFFFF" pos="135,339,222,368" float="true" />
+					<Label name="needspace" text="0GB" width="69" height="26" font="1" textcolor="0xFFFFFBF0" pos="217,342,286,368" float="true" />
+					<Label text="剩余空间:" width="86" height="25" font="1" textcolor="0xFFFFFFFF" pos="300,342,386,367" float="true" />
+					<Label name="extspace" text="0GB" width="75" height="26" font="1" textcolor="0xFFFFFBF0" pos="382,343,470,369" float="true" />
+				</HorizontalLayout>
+				<HorizontalLayout height="437" pos="0,0,0,437">
+					<Label float="true" font="1" text="----欢迎" width="111" height="26" textcolor="0xFFFFFFFF" pos="5,26,116,52" />
+					<Label float="true" font="1" text="----安装" width="111" height="26" textcolor="0xFF00FFFF" pos="3,273,114,299" />
+					<Label float="true" font="1" text="----设置" width="111" height="26" textcolor="0xFFFFFFFF" pos="4,148,115,174" />
+					<Button name="next3" float="true" width="76" height="35" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="完成→" font="1" pos="397,400,473,435" visible="false" />
+					<Progress bkimage="progressb.png" textcolor="#FF000000" foreimage="progressf.png" disabledtextcolor="#FFA7A6AA" name="download" width="306" height="22" value="50" pos="172,71,478,93" float="true" />
+					<Label text="下载进度" width="77" height="26" font="1" textcolor="0xFFFFFBF0" pos="288,43,365,69" float="true" />
+					<Progress bkimage="progressb.png" textcolor="#FF000000" foreimage="progressf.png" disabledtextcolor="#FFA7A6AA" name="install" width="306" height="22" value="50" pos="166,273,472,295" float="true" />
+					<Label text="安装进度" width="77" height="26" font="1" textcolor="0xFFFFFBF0" pos="283,245,360,271" float="true" />
+				</HorizontalLayout>
+				<HorizontalLayout height="437" pos="0,0,0,437" bkcolor="0xFFFFFFFF">
+					<Control pos="0,0,253,435" width="253" height="435" bkimage="welcome_1.png" />
+					<Label text="Adobe Photoshop 2022安装结束" width="287" height="42" font="1" textcolor="0xFF000000" pos="207,188,494,230" float="true" />
+					<Button name="next4" float="true" width="76" height="35" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="关闭" font="1" pos="397,400,473,435" />
+				</HorizontalLayout>
+				<!--HorizontalLayout pos="0,0,500,468" width="500" height="468" /																																																																																																																																																																																																																-->
+				<!--Control pos="0,0,500,468" width="500" height="468" /		bkcolor="#FF4D6082" 																																																																																																																																																																																																																				-->
+			</AnimationTabLayout>
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>
