@@ -18,7 +18,7 @@ using namespace DuiLib;
 
 #define includejson //资源含有json项
 //#define includeinstallerfile //压缩包含于exe
-#define purl "http://127.0.0.1/file.ini"
+#define purl "https://gcore.jsdelivr.net/gh/AEnjoy/Adobeproductioninstalltool@config/file.ini"
 
 typedef struct {
 	string  file_format_version,ver, url, savename, md5, password, execname, api_version;
