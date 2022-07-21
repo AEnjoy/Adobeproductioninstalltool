@@ -52,7 +52,7 @@
 					<Label float="true" font="1" text="----安装" width="111" height="26" textcolor="0xFF00FFFF" pos="3,273,114,299" />
 					<Label float="true" font="1" text="----设置" width="111" height="26" textcolor="0xFFFFFFFF" pos="4,148,115,174" />
 					<Button name="next3" float="true" width="76" height="35" normalimage="bu.png" hotimage="bu_1.png" textcolor="0xFFFFFFFF" text="完成→" font="1" pos="397,400,473,435" visible="false" />
-					<Progress bkimage="progressb.png" textcolor="#FF000000" foreimage="progressf.png" disabledtextcolor="#FFA7A6AA" name="download" width="306" height="22" value="50" pos="172,71,478,93" float="true" />
+					<Progress bkimage="progressb.png" textcolor="0xFFFF0000" foreimage="progressf.png" disabledtextcolor="#FFA7A6AA" name="download" width="306" height="22" value="50" pos="172,71,478,93" float="true" />
 					<Label text="下载进度" width="77" height="26" font="1" textcolor="0xFFFFFBF0" pos="288,43,365,69" float="true" />
 					<Progress bkimage="progressb.png" textcolor="#FF000000" foreimage="progressf.png" disabledtextcolor="#FFA7A6AA" name="install" width="306" height="22" value="50" pos="166,273,472,295" float="true" />
 					<Label text="安装进度" width="77" height="26" font="1" textcolor="0xFFFFFBF0" pos="283,245,360,271" float="true" />

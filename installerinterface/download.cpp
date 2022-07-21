@@ -4,10 +4,12 @@
 #include <string>
 #include "CMainWnd.h"
 #include <io.h>
+#include <atlstr.h>
 #pragma comment(lib,"lib/libcurl.lib")
 #pragma comment(lib,"lib/libpthread.lib")
 using namespace std;
-int downloadprog = 0;//ÏÂÔØ½ø¶È
+int downloadprog = 0;//ä¸‹è½½è¿›åº¦
+static long fileLength;
 #define forcehttpspass(x) curl_easy_setopt(x, CURLOPT_SSL_VERIFYPEER, FALSE);
 struct tNode
 {
@@ -43,27 +45,49 @@ static size_t downLoadPackage(void* ptr, size_t size, size_t nmemb, void* userda
 
 int assetsManagerProgressFunc(void* ptr, double totalToDownload, double nowDownloaded, double totalToUpLoad, double nowUpLoaded)
 {
-	static int percent = 0;
-	
+	static int percent = 0; long double speed=0;
+	CURL* easy_handle = static_cast<CURL*>(ptr);
+	if(easy_handle)curl_easy_getinfo(easy_handle, CURLINFO_SPEED_DOWNLOAD, &speed);
 	if (totalToDownload > 0)
 	{
 		downloadprog = (int)(nowDownloaded / totalToDownload * 100);
 	}
 	extern CMainWnd* pFrame;
 	pFrame->m_download->SetValue(downloadprog);
-	//printf("ÏÂÔØ½ø¶È%0d%%\r", downloadprog);
+	if (speed != 0) 
+	{
+		char downloadspeed[100]; string bit="B";
+		if (speed > 1024 * 1024 * 1024)
+		{
+			bit = "G";
+			speed /= static_cast<curl_off_t>(1024 * 1024 * 1024);
+		}
+		else if (speed > 1024 * 1024)
+		{
+			bit = "M";
+			speed /= static_cast<curl_off_t>(1024 * 1024);
+		}
+		else if (speed > 1024)
+		{
+			bit = "kB";
+			speed /= 1024;
+		}
+		sprintf(downloadspeed, "ä¸‹è½½é€Ÿåº¦:%.2f%s/s æ€»ä¸‹è½½å¤§å°:%d MB æ€»è¿›åº¦:%d/%%100", speed, bit.c_str(), (int)totalToDownload/1024/1024, downloadprog);
+		pFrame->m_download->SetText(CString(downloadspeed));
+	}
+	//printf("ä¸‹è½½è¿›åº¦%0d%%\r", downloadprog);
 	return 0;
 }
 
 /************************************************************************/
-/* »ñÈ¡ÒªÏÂÔØµÄÔ¶³ÌÎÄ¼şµÄ´óĞ¡ 											*/
+/* è·å–è¦ä¸‹è½½çš„è¿œç¨‹æ–‡ä»¶çš„å¤§å° 											*/
 /************************************************************************/
 long getDownloadFileLenth(const char* url) {
 	double downloadFileLenth = 0;
 	CURL* handle = curl_easy_init();
 	curl_easy_setopt(handle, CURLOPT_URL, url);
-	curl_easy_setopt(handle, CURLOPT_HEADER, 1);    //Ö»ĞèÒªheaderÍ·
-	curl_easy_setopt(handle, CURLOPT_NOBODY, 1);    //²»ĞèÒªbody
+	curl_easy_setopt(handle, CURLOPT_HEADER, 1);    //åªéœ€è¦headerå¤´
+	curl_easy_setopt(handle, CURLOPT_NOBODY, 1);    //ä¸éœ€è¦body
 	forcehttpspass(handle)
 	if (curl_easy_perform(handle) == CURLE_OK)
 	{
@@ -99,11 +123,11 @@ void* workThread(void* pData)
 }
 bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, bool show)
 {
-	long fileLength = getDownloadFileLenth(_packageUrl.c_str());
+	fileLength = getDownloadFileLenth(_packageUrl.c_str());
 
 	if (fileLength <= 0)
 	{
-		printf("Error:ÎÄ¼şÍ·»ñÈ¡´íÎó...");
+		fprintf(stderr,"Error:æ–‡ä»¶å¤´è·å–é”™è¯¯...");
 		return false;
 	}
 
@@ -149,7 +173,7 @@ bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, 
 		curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, downLoadPackage);
 		curl_easy_setopt(_curl, CURLOPT_WRITEDATA, pNode);
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
-		curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, assetsManagerProgressFunc);//½ø¶È´¦Àíº¯Êı
+		curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, assetsManagerProgressFunc);//è¿›åº¦å¤„ç†å‡½æ•°
 																					 //curl_easy_setopt(_curl, CURLOPT_PROGRESSDATA, this);
 		curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1L);
 		curl_easy_setopt(_curl, CURLOPT_LOW_SPEED_LIMIT, 1L);
@@ -173,6 +197,6 @@ bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, 
 
 	fclose(fp);
 
-	//printf("ÏÂÔØÍê³É......\n");
+	//printf("ä¸‹è½½å®Œæˆ......\n");
 	return true;
 }
