@@ -274,6 +274,13 @@ void CMainWnd::InstallStart()
 	goto check;
 check:
 #ifndef DEBUG
+	size_t memsize;
+	if (!isVmemorysatisfied(memsize))
+	{
+		char strsize[120];
+		sprintf(strsize, "注意:\n您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需,\n可能无法使用某些功能.\n当前显存为:%dMB", memsize);
+		MessageBoxA(0, strsize,"警告:", MB_ICONWARNING);
+	}
 	string md5;
 	get_file_md5(t0->savename, md5);
 #endif // !DEBUG

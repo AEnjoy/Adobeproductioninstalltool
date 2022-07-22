@@ -10,6 +10,7 @@
 #pragma comment(lib, "../duilib/DuiLib.lib")//x86
 #pragma comment(lib, "lib/libcrypto.lib")
 #pragma comment(lib, "lib/libssl.lib")
+#pragma comment(lib, "DXGI.lib")
 using namespace DuiLib;
 //¹¦ÄÜ
 #include "include/releaseHelper.h"
@@ -26,5 +27,4 @@ typedef struct {
 	string  file_format_version,ver, url, savename, md5, password, execname, api_version;
 	int32_t needspace/*KB*/, zipspace/*KB*/;
 } iinfo;
-void _parserjsonfile(iinfo*& a, const char* filename = "\\file.ini");
-wstring folder_open_dialog();
+

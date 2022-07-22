@@ -99,6 +99,7 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <AdditionalOptions> /ltcg /VERSION:10.00 /SUBSYSTEM:CONSOLE,5.01 /OSVERSION:10.00 /NXCOMPAT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

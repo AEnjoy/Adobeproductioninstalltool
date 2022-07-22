@@ -7,6 +7,7 @@
 #include <shobjidl.h>
 #include <windows.h>
 #include <atlstr.h>
+#include <DXGI.h>
 using namespace std;
 using namespace DuiLib;
 string WCharToMByte(LPCWSTR lpcwszStr)
@@ -117,4 +118,31 @@ wstring folder_open_dialog()
         }
     }
     return move(ret);
+}
+bool isVmemorysatisfied(size_t &memsize) {
+    IDXGIFactory* pFactory;IDXGIAdapter* pAdapter;
+    vector <IDXGIAdapter*> vAdapters;            // ÏÔ¿¨  
+    int iAdapterNum = 0;
+    bool flag=false;
+    HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
+    if (FAILED(hr))
+        return flag;
+    while (pFactory->EnumAdapters(iAdapterNum, &pAdapter) != DXGI_ERROR_NOT_FOUND)
+    {
+        vAdapters.push_back(pAdapter);
+        iAdapterNum++;
+    }
+    for (auto i : vAdapters) {
+        DXGI_ADAPTER_DESC adapterDesc;
+        i->GetDesc(&adapterDesc);
+        auto t=adapterDesc.DedicatedVideoMemory / 1024 / 1024;
+        if (t > 2048)
+        {
+            flag = true;
+            memsize = t;
+        }
+        if(!flag)
+            memsize = t;
+    }
+    return flag;
 }
