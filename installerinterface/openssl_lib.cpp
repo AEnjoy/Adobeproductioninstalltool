@@ -4,7 +4,7 @@
 //#include <string.h>
 using namespace std;
 #pragma warning(disable:4996)
-int get_file_md5(const string& file_name, string& md5_value)
+extern "C" int get_file_md5(const string & file_name, string & md5_value)
 {
     md5_value.clear();
     ifstream file(file_name.c_str(), ifstream::binary);

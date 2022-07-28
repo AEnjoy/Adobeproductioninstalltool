@@ -88,7 +88,8 @@ long getDownloadFileLenth(const char* url) {
 	curl_easy_setopt(handle, CURLOPT_URL, url);
 	curl_easy_setopt(handle, CURLOPT_HEADER, 1);    //只需要header头
 	curl_easy_setopt(handle, CURLOPT_NOBODY, 1);    //不需要body
-	forcehttpspass(handle)
+	//forcehttpspass(handle)
+	curl_easy_setopt(handle, CURLOPT_CAINFO, "curl-ca-bundle.crt");
 	if (curl_easy_perform(handle) == CURLE_OK)
 	{
 		curl_easy_getinfo(handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &downloadFileLenth);
@@ -169,7 +170,8 @@ bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, 
 		pNode->fp = fp;
 
 		curl_easy_setopt(_curl, CURLOPT_URL, _packageUrl.c_str());
-		forcehttpspass(_curl)
+		//forcehttpspass(_curl)
+		curl_easy_setopt(_curl, CURLOPT_CAINFO, "curl-ca-bundle.crt");
 		curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, downLoadPackage);
 		curl_easy_setopt(_curl, CURLOPT_WRITEDATA, pNode);
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, false);
