@@ -45,8 +45,7 @@ class CMainWnd : public WindowImplBase
 {
     
 public:
-    static void* ThreadFunc(void*);
-    static void* ThreadFunc1(void* arg);
+
 	CMainWnd();
 	CDuiString GetSkinFile();
 	LPCTSTR GetWindowClassName() const;
@@ -67,7 +66,7 @@ public:
 	void Notify(TNotifyUI& msg);
 	void OnFinalMessage(HWND hWnd);
     void progress_();
-
+    void environmental_inspection();
     void downloadpack();
     void dirchanged(bool once);
     CProgressUI* m_pProgressBar, * m_download;
@@ -76,6 +75,9 @@ private:
 	void Init();
     void InstallStart();
 	void InstallFinished();
+    static void* ThreadFunc(void*);
+    static void* ThreadFunc1(void* arg);
+    static void* ThreadFunc2(void* arg);
     float t;//当前安装位置剩余空间
 private:
     //控件指针
@@ -85,7 +87,7 @@ private:
     CLabelUI* needspace, *extspace;//所需空间,剩余空间
     CLabelUI *pver,*nver;
     CButtonUI *next3,*next2;
-
+    CListUI* list;
     string downloadurl;
     bool downloadfinishflag = false;
     bool needdowload = false;

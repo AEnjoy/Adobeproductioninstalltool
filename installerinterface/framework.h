@@ -28,4 +28,5 @@ int _declspec(dllexport) get_file_md5(const string& file_name, string& md5_value
 string _declspec(dllexport) WCharToMByte(LPCWSTR lpcwszStr);
 bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize);
 wstring _declspec(dllexport) folder_open_dialog();
+BOOL _declspec(dllexport) ExeIsAdmin();
 }

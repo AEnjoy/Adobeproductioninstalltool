@@ -78,99 +78,6 @@ void InitResource()
 	}
 */
 }
-BOOL ExeIsAdmin()
-{
-	HANDLE hToken;
-	DWORD dwStatus;
-	DWORD dwAccessMask;
-	DWORD dwAccessDesired;
-	DWORD dwACLSize;
-	DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
-	PACL pACL = NULL;
-	PSID psidAdmin = NULL;
-	BOOL bReturn = FALSE;
-	PRIVILEGE_SET ps;
-	GENERIC_MAPPING GenericMapping;
-	PSECURITY_DESCRIPTOR psdAdmin = NULL;
-	SID_IDENTIFIER_AUTHORITY SystemSidAuthority = SECURITY_NT_AUTHORITY;
-
-	if (!ImpersonateSelf(SecurityImpersonation))
-		goto LeaveIsAdmin;
-
-	if (!OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, FALSE, &hToken))
-	{
-		if (GetLastError() != ERROR_NO_TOKEN)
-			goto LeaveIsAdmin;
-
-		if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
-			goto LeaveIsAdmin;
-
-		if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
-			goto LeaveIsAdmin;
-	}
-
-	if (!AllocateAndInitializeSid(&SystemSidAuthority, 2,
-		SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
-		0, 0, 0, 0, 0, 0, &psidAdmin))
-		goto LeaveIsAdmin;
-
-	psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
-	if (psdAdmin == NULL)
-		goto LeaveIsAdmin;
-
-	if (!InitializeSecurityDescriptor(psdAdmin,
-		SECURITY_DESCRIPTOR_REVISION))
-		goto LeaveIsAdmin;
-
-	dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) +
-		GetLengthSid(psidAdmin) - sizeof(DWORD);
-
-	pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
-	if (pACL == NULL)
-		goto LeaveIsAdmin;
-
-	if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2))
-		goto LeaveIsAdmin;
-
-	dwAccessMask = ACCESS_READ | ACCESS_WRITE;
-
-	if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask, psidAdmin))
-		goto LeaveIsAdmin;
-
-	if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE))
-		goto LeaveIsAdmin;
-
-	if (!SetSecurityDescriptorGroup(psdAdmin, psidAdmin, FALSE))
-		goto LeaveIsAdmin;
-	if (!SetSecurityDescriptorOwner(psdAdmin, psidAdmin, FALSE))
-		goto LeaveIsAdmin;
-
-	if (!IsValidSecurityDescriptor(psdAdmin))
-		goto LeaveIsAdmin;
-
-	dwAccessDesired = ACCESS_READ;
-
-	GenericMapping.GenericRead = ACCESS_READ;
-	GenericMapping.GenericWrite = ACCESS_WRITE;
-	GenericMapping.GenericExecute = 0;
-	GenericMapping.GenericAll = ACCESS_READ | ACCESS_WRITE;
-
-	if (!AccessCheck(psdAdmin, hToken, dwAccessDesired,
-		&GenericMapping, &ps, &dwStructureSize, &dwStatus, &bReturn))
-		goto LeaveIsAdmin;
-
-	if (!RevertToSelf())
-		bReturn = FALSE;
-
-LeaveIsAdmin:
-
-	if (pACL) LocalFree(pACL);
-	if (psdAdmin) LocalFree(psdAdmin);
-	if (psidAdmin) FreeSid(psidAdmin);
-
-	return bReturn;
-
-}
 
 auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -180,27 +87,13 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 	EnableMemLeakCheck();//防止内存泄露
-#ifndef DEBUG
-	if (!ExeIsAdmin()) 
-	{
-		MessageBoxA(NULL,"!)请使用管理员权限运行安装程序.","Error:", MB_ICONHAND);
-		exit(1);
-	}
-#endif // DEBUG
-
-
-	if (getwinverdwBuildNumber() < 17763)
-	{
-		MessageBoxA(NULL, "!) PS2022系统要求：Windows 10 1909(17763)及以上.", "Error:", MB_ICONHAND);
-		exit(1);
-	}
 	HRESULT Hr = ::CoInitialize(NULL);
 	CPaintManagerUI::SetInstance(hInstance);
 	InitResource();
 	
 	if (pFrame == NULL)
 		return 0;
-CReleaseDLL releasehelper;
+//CReleaseDLL releasehelper;
 #ifdef includejson
 #ifdef DEBUG
 	releasehelper.FreeResFile(IDR_FILE1, "FILE", ::filepath);

@@ -160,7 +160,7 @@
     <ClCompile Include="download.cpp" />
     <ClCompile Include="INIParser.cpp" />
     <ClCompile Include="install.cpp" />
-    <ClCompile Include="installerinterface.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="lzma2103\CPP\7zip\Common\FileStreams.cpp" />
     <ClCompile Include="lzma2103\CPP\7zip\UI\Client7z\7z_fun.cpp" />
     <ClCompile Include="lzma2103\CPP\7zip\UI\Client7z\StdAfx.cpp" />

@@ -146,3 +146,73 @@ bool isVmemorysatisfied(size_t &memsize) {
     }
     return flag;
 }
+BOOL ExeIsAdmin()
+{
+    HANDLE hToken;
+    DWORD dwStatus;
+    DWORD dwAccessMask;
+    DWORD dwAccessDesired;
+    DWORD dwACLSize;
+    DWORD dwStructureSize = sizeof(PRIVILEGE_SET);
+    PACL pACL = NULL;
+    PSID psidAdmin = NULL;
+    BOOL bReturn = FALSE;
+    PRIVILEGE_SET ps;
+    GENERIC_MAPPING GenericMapping;
+    PSECURITY_DESCRIPTOR psdAdmin = NULL;
+    SID_IDENTIFIER_AUTHORITY SystemSidAuthority = SECURITY_NT_AUTHORITY;
+    if (!ImpersonateSelf(SecurityImpersonation))
+        goto LeaveIsAdmin;
+    if (!OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, FALSE, &hToken))
+    {
+        if (GetLastError() != ERROR_NO_TOKEN)
+            goto LeaveIsAdmin;
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+            goto LeaveIsAdmin;
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken))
+            goto LeaveIsAdmin;
+    }
+    if (!AllocateAndInitializeSid(&SystemSidAuthority, 2,
+        SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,
+        0, 0, 0, 0, 0, 0, &psidAdmin))
+        goto LeaveIsAdmin;
+    psdAdmin = LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
+    if (psdAdmin == NULL)
+        goto LeaveIsAdmin;
+    if (!InitializeSecurityDescriptor(psdAdmin,
+        SECURITY_DESCRIPTOR_REVISION))
+        goto LeaveIsAdmin;
+    dwACLSize = sizeof(ACL) + sizeof(ACCESS_ALLOWED_ACE) +
+        GetLengthSid(psidAdmin) - sizeof(DWORD);
+    pACL = (PACL)LocalAlloc(LPTR, dwACLSize);
+    if (pACL == NULL)
+        goto LeaveIsAdmin;
+    if (!InitializeAcl(pACL, dwACLSize, ACL_REVISION2))
+        goto LeaveIsAdmin;
+    dwAccessMask = ACCESS_READ | ACCESS_WRITE;
+    if (!AddAccessAllowedAce(pACL, ACL_REVISION2, dwAccessMask, psidAdmin))
+        goto LeaveIsAdmin;
+    if (!SetSecurityDescriptorDacl(psdAdmin, TRUE, pACL, FALSE))
+        goto LeaveIsAdmin;
+    if (!SetSecurityDescriptorGroup(psdAdmin, psidAdmin, FALSE))
+        goto LeaveIsAdmin;
+    if (!SetSecurityDescriptorOwner(psdAdmin, psidAdmin, FALSE))
+        goto LeaveIsAdmin;
+    if (!IsValidSecurityDescriptor(psdAdmin))
+        goto LeaveIsAdmin;
+    dwAccessDesired = ACCESS_READ;
+    GenericMapping.GenericRead = ACCESS_READ;
+    GenericMapping.GenericWrite = ACCESS_WRITE;
+    GenericMapping.GenericExecute = 0;
+    GenericMapping.GenericAll = ACCESS_READ | ACCESS_WRITE;
+    if (!AccessCheck(psdAdmin, hToken, dwAccessDesired,
+        &GenericMapping, &ps, &dwStructureSize, &dwStatus, &bReturn))
+        goto LeaveIsAdmin;
+    if (!RevertToSelf())
+        bReturn = FALSE;
+LeaveIsAdmin:
+    if (pACL) LocalFree(pACL);
+    if (psdAdmin) LocalFree(psdAdmin);
+    if (psidAdmin) FreeSid(psidAdmin);
+    return bReturn;
+}

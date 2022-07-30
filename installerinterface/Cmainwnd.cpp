@@ -32,7 +32,33 @@ DWORD getwinverdwBuildNumber() //int such as 19041
 	FreeLibrary(hinst);
 	return dwBuildNumber;
 }
-
+static inline auto warningflag()->CControlUI* {
+	auto warnning = new CControlUI;//! 
+	warnning->SetMaxHeight(24);
+	warnning->SetMinHeight(24);
+	warnning->SetMaxWidth(24);
+	warnning->SetMinWidth(24);
+	warnning->SetBkImage(L"res\\warning.png");
+	return warnning;
+}
+static inline auto errorflag()->CControlUI* {
+	auto warnning = new CControlUI;//X
+	warnning->SetMaxHeight(24);
+	warnning->SetMinHeight(24);
+	warnning->SetMaxWidth(24);
+	warnning->SetMinWidth(24);
+	warnning->SetBkImage(L"res\\error.png");
+	return warnning;
+}
+static inline auto acceptflag()->CControlUI* {
+	auto warnning = new CControlUI;//√ 
+	warnning->SetMaxHeight(24);
+	warnning->SetMinHeight(24);
+	warnning->SetMaxWidth(24);
+	warnning->SetMinWidth(24);
+	warnning->SetBkImage(L"res\\accept.png");
+	return warnning;
+}
 void* CMainWnd::ThreadFunc(void* arg)
 {
 	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
@@ -43,6 +69,12 @@ void* CMainWnd::ThreadFunc1(void* arg)
 {
 	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
 	thiz->downloadpack();
+	return nullptr;
+}
+void* CMainWnd::ThreadFunc2(void* arg)
+{
+	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
+	thiz->environmental_inspection();
 	return nullptr;
 }
 CMainWnd::CMainWnd()
@@ -58,6 +90,7 @@ CMainWnd::CMainWnd()
 	,next3(NULL)
 	,next2(NULL)
 	,t0(NULL)
+	,list(nullptr)
 {
 }
 
@@ -84,8 +117,66 @@ void CMainWnd::InitWindow()
 		Init();
 }
 void CMainWnd::progress_() {
-	Sleep(500);
+	//Sleep(500);
 	m_download->SetValue(downloadprog);
+}
+void CMainWnd::environmental_inspection()
+{
+	auto line = new CHorizontalLayoutUI;
+	auto pLine = new CListContainerElementUI;
+	pLine->SetTag(0);
+	pLine->SetFixedHeight(24);
+	auto text = new CLabelUI; //text->SetTextColor(0xff00ff00);
+	pLine->Add(text);
+	if (!ExeIsAdmin()) {
+		text->SetText(L"W:!建议使用管理员权限运行,没有管理员权限将只能安装到用户目录.");
+		pLine->Add(warningflag());
+	}
+	else {
+		text->SetText(L"I:使用管理员权限安装.");
+		pLine->Add(acceptflag());
+	}
+	list->Add(pLine);
+	auto pLine1 = new CListContainerElementUI;
+	auto text1 = new CLabelUI;// text1->SetTextColor(0xff00ff00);
+	pLine1->SetTag(1);
+	pLine1->SetFixedHeight(24);
+	pLine1->Add(text1);
+	auto t = getwinverdwBuildNumber();
+	if (t < 17763) {
+		text1->SetText(L"E:!Adobe CC 2022及以上所需要windows10 build 17763及更高,系统版本不符.");
+		pLine1->Add(errorflag());
+		next2->SetVisible(false);
+	}
+	else if (t >= 17763 && t < 19041) {
+		text1->SetText(L"W:!Adobe CC 2022及以上建议使用windows10 build 19041及更高版本.");
+		pLine1->Add(warningflag());
+	}
+	else {
+		text1->SetText(L"I:系统满足windows10 build 19041及更高版本.");
+		pLine1->Add(acceptflag());
+	}
+	list->Add(pLine1);
+	auto pLine2 = new CListContainerElementUI;
+	auto text2 = new CLabelUI; //text2->SetTextColor(0xff00ff00);
+	pLine2->SetTag(2);
+	pLine2->SetFixedHeight(24);
+	pLine2->Add(text2);
+	size_t memsize;
+	if (!isVmemorysatisfied(memsize))
+	{
+		char strsize[120];
+		sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需,可能无法使用某些功能.当前显存为:%dMB", memsize);
+		text2->SetText(CString(strsize));
+		pLine2->Add(warningflag());
+	}
+	else {
+		char strsize[120];
+		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB", memsize);
+		text2->SetText(CString(strsize));
+		pLine2->Add(acceptflag());
+	}
+	list->Add(pLine2);
 }
 void CMainWnd::downloadpack()
 {
@@ -247,11 +338,9 @@ void CMainWnd::Init()
 	nver = static_cast<CLabelUI*>(m_pm.FindControl(_T("nowver")));
 	next3 = static_cast<CButtonUI*>(m_pm.FindControl(_T("next3")));
 	next2 = static_cast<CButtonUI*>(m_pm.FindControl(_T("next2")));
+	list = static_cast<CListUI*>(m_pm.FindControl(_T("enr")));
 	}
 #ifdef includejson
-	
-	
-
 	_parserjsonfile(t0,"\\file.ini");
 	nver->SetText(CString(t0->ver.c_str()));
 	char t5[30];
@@ -264,6 +353,8 @@ void CMainWnd::Init()
 	m_pProgressBar->SetValue(0);
 	m_download->SetValue(0);
 	dirchanged(true);
+	pthread_t th; int* thread_ret = NULL;
+	pthread_create(&th, NULL, CMainWnd::ThreadFunc2, this);
 }
 void CMainWnd::InstallStart()
 {
@@ -274,13 +365,6 @@ void CMainWnd::InstallStart()
 	goto check;
 check:
 #ifndef DEBUG
-	size_t memsize;
-	if (!isVmemorysatisfied(memsize))
-	{
-		char strsize[120];
-		sprintf(strsize, "注意:\n您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需,\n可能无法使用某些功能.\n当前显存为:%dMB", memsize);
-		MessageBoxA(0, strsize,"警告:", MB_ICONWARNING);
-	}
 	string md5;
 	get_file_md5(t0->savename, md5);
 #endif // !DEBUG
