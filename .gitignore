@@ -8,3 +8,5 @@ Release.7z
 packages
 package.zip
 res/project.dui
+installerinterface/include/wintoastlib.cpp
+installerinterface/include/wintoastlib.h

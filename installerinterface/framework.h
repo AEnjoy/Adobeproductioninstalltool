@@ -16,6 +16,7 @@ using namespace std;
 #include <Shlobj.h>
 #include <Commctrl.h>
 #include "installerinterface.h"
+//#include "include/wintoastlib.h"
 #define ACCESS_READ 1 
 #define ACCESS_WRITE 2 
 #define kDllName "extracting.dll" //7-zip dll
@@ -26,7 +27,8 @@ DWORD _declspec(dllexport) getwinverdwBuildNumber();
 BOOL _declspec(dllexport) FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter = FALSE);
 int _declspec(dllexport) get_file_md5(const string& file_name, string& md5_value);
 string _declspec(dllexport) WCharToMByte(LPCWSTR lpcwszStr);
-bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize);
+bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize,wstring& devicesname);
 wstring _declspec(dllexport) folder_open_dialog();
 BOOL _declspec(dllexport) ExeIsAdmin();
+//void _declspec(dllexport) ShowNotification(std::wstring& appName, std::wstring& firstLine);
 }

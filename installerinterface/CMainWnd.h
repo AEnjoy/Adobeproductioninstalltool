@@ -91,4 +91,6 @@ private:
     string downloadurl;
     bool downloadfinishflag = false;
     bool needdowload = false;
+    //wstring appname = L"Adobe Install Tool";
+    //wstring info;
 };

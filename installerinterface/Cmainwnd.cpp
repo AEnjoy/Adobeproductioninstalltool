@@ -122,6 +122,8 @@ void CMainWnd::progress_() {
 }
 void CMainWnd::environmental_inspection()
 {
+	//info = L"正在检查运行环境";
+	//ShowNotification(appname, info);
 	auto line = new CHorizontalLayoutUI;
 	auto pLine = new CListContainerElementUI;
 	pLine->SetTag(0);
@@ -129,7 +131,8 @@ void CMainWnd::environmental_inspection()
 	auto text = new CLabelUI; //text->SetTextColor(0xff00ff00);
 	pLine->Add(text);
 	if (!ExeIsAdmin()) {
-		text->SetText(L"W:!建议使用管理员权限运行,没有管理员权限将只能安装到用户目录.");
+		text->SetText(L"W:建议使用管理员权限运行.");
+		text->SetToolTip(L"W:!建议使用管理员权限运行,没有管理员权限将只能安装到用户目录.");
 		pLine->Add(warningflag());
 	}
 	else {
@@ -144,16 +147,19 @@ void CMainWnd::environmental_inspection()
 	pLine1->Add(text1);
 	auto t = getwinverdwBuildNumber();
 	if (t < 17763) {
-		text1->SetText(L"E:!Adobe CC 2022及以上所需要windows10 build 17763及更高,系统版本不符.");
+		text1->SetText(L"E:当前系统版本过低.");
+		text1->SetToolTip(L"E:!Adobe CC 2022及以上所需要Windows10 build 17763及更高,当前系统版本不满足最低运行要求.");
 		pLine1->Add(errorflag());
 		next2->SetVisible(false);
 	}
 	else if (t >= 17763 && t < 19041) {
-		text1->SetText(L"W:!Adobe CC 2022及以上建议使用windows10 build 19041及更高版本.");
+		text1->SetText(L"W:系统版本较旧,但满足最低运行需求.");
+		text1->SetToolTip(L"W:!Adobe CC 2022及以上建议使用windows10 build 19041及更高版本.");
 		pLine1->Add(warningflag());
 	}
 	else {
-		text1->SetText(L"I:系统满足windows10 build 19041及更高版本.");
+		text1->SetToolTip(L"I:系统版本需求满足windows10 build 19041及更高版本.");
+		text1->SetText(L"I:系统版本满足推荐.");
 		pLine1->Add(acceptflag());
 	}
 	list->Add(pLine1);
@@ -162,18 +168,20 @@ void CMainWnd::environmental_inspection()
 	pLine2->SetTag(2);
 	pLine2->SetFixedHeight(24);
 	pLine2->Add(text2);
-	size_t memsize;
-	if (!isVmemorysatisfied(memsize))
+	size_t memsize; wstring devicesname;
+	if (!isVmemorysatisfied(memsize, devicesname))
 	{
-		char strsize[120];
-		sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需,可能无法使用某些功能.当前显存为:%dMB", memsize);
-		text2->SetText(CString(strsize));
+		char strsize[250];
+		sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需(或未安装显卡驱动),可能无法使用某些功能.当前显存为:%dMB 设备描述:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+		text2->SetText(L"W:显存不足");
+		text2->SetToolTip(CString(strsize));
 		pLine2->Add(warningflag());
 	}
 	else {
-		char strsize[120];
-		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB", memsize);
-		text2->SetText(CString(strsize));
+		char strsize[250];
+		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB 当前GPU:%s", memsize,  WCharToMByte(devicesname.c_str()).c_str());
+		text2->SetText(L"I:显存充足");
+		text2->SetToolTip(CString(strsize));
 		pLine2->Add(acceptflag());
 	}
 	list->Add(pLine2);

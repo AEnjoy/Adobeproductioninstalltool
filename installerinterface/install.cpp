@@ -119,7 +119,7 @@ wstring folder_open_dialog()
     }
     return move(ret);
 }
-bool isVmemorysatisfied(size_t &memsize) {
+bool isVmemorysatisfied(size_t &memsize,wstring &devicesname) {
     IDXGIFactory* pFactory;IDXGIAdapter* pAdapter;
     vector <IDXGIAdapter*> vAdapters;            // ÏÔ¿¨  
     int iAdapterNum = 0;
@@ -135,14 +135,18 @@ bool isVmemorysatisfied(size_t &memsize) {
     for (auto i : vAdapters) {
         DXGI_ADAPTER_DESC adapterDesc;
         i->GetDesc(&adapterDesc);
-        auto t=adapterDesc.DedicatedVideoMemory / 1024 / 1024;
+        auto t = (adapterDesc.DedicatedVideoMemory/* + adapterDesc.DedicatedSystemMemory + adapterDesc.SharedSystemMemory*/) / 1024 / 1024;
         if (t > 2048)
         {
             flag = true;
             memsize = t;
+            devicesname=adapterDesc.Description;
         }
-        if(!flag)
+        if (!flag)
+        {
             memsize = t;
+            devicesname = adapterDesc.Description;
+        }
     }
     return flag;
 }

@@ -14,9 +14,9 @@ extern "C" int get_file_md5(const string & file_name, string & md5_value)
     }
     MD5_CTX md5Context;
     MD5_Init(&md5Context);
-    char buf[1024 * 16];
+    char* buf= (char*)malloc(16384); 
     while (file.good()) {
-        file.read(buf, sizeof(buf));
+        file.read(buf, 16384);
         MD5_Update(&md5Context, buf, file.gcount());
     }
     unsigned char result[MD5_DIGEST_LENGTH];
