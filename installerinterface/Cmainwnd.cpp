@@ -8,7 +8,6 @@
 #include <windows.h>
 #include <io.h>
 #include <direct.h>
-#include "include/pthreads/pthread.h"
 using namespace std;
 extern int downloadprog;//下载进度
 int allowclose = 1;
@@ -77,6 +76,13 @@ void* CMainWnd::ThreadFunc2(void* arg)
 	thiz->environmental_inspection();
 	return nullptr;
 }
+void* CMainWnd::ThreadFunc3(void* arg)
+{
+	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
+	MessageBoxA(0, "正在检查云端更新...", "Info:", MB_ICONINFORMATION);
+	thiz->checkp();
+	return nullptr;
+}
 CMainWnd::CMainWnd()
 	: m_pStepTabLayout(NULL)
 	, nowver(NULL)
@@ -91,6 +97,7 @@ CMainWnd::CMainWnd()
 	,next2(NULL)
 	,t0(NULL)
 	,list(nullptr)
+	,speed(nullptr)
 {
 }
 
@@ -186,6 +193,29 @@ void CMainWnd::environmental_inspection()
 	}
 	list->Add(pLine2);
 }
+void CMainWnd::checkp()
+{
+#ifndef DEBUG
+	if (downLoad(1, purl, "file.ini"))
+	{
+		SetFileAttributesA("file.ini", FILE_ATTRIBUTE_HIDDEN);
+		_parserjsonfile(i_, "\\file.ini");
+		t0 = i_;
+	}
+	else {
+		MessageBoxA(GetHWND(), "获取云端版本失败!", "Error:", MB_ICONERROR);
+		return;
+	}
+#else 
+	_parserjsonfile(i_, "\\file.ini");
+#endif // DEBUG
+	CString s = i_->ver.c_str();
+	pver->SetText(s);
+	MessageBoxW(NULL, L"最新版本:\n" + s, L"操作完成", 0);
+	char t5[30];
+	sprintf(t5, "%0.2f GB", float(i_->needspace / static_cast<double>(1024) / 1024));
+	needspace->SetText(CString(t5));
+}
 void CMainWnd::downloadpack()
 {
 	next3->SetVisible(false);
@@ -254,30 +284,12 @@ void CMainWnd::Notify(TNotifyUI& msg)
 		}
 		}
 		if (msg.pSender->GetName() == _T("checkp")) {
-#ifndef DEBUG
-if( downLoad(1,purl,"file.ini"))
-{
-	SetFileAttributesA("file.ini", FILE_ATTRIBUTE_HIDDEN);
-	_parserjsonfile(i_, "\\file.ini");
-	t0 = i_ ;
-}
-else {
-	MessageBoxA(GetHWND(), "获取云端版本失败!", "Error:", MB_ICONERROR);
-	return;
-}
-#else 
-			_parserjsonfile(i_, "\\file.ini");
-#endif // DEBUG
-
-			CString s = i_->ver.c_str();
-			pver->SetText(s);
-			MessageBoxW(NULL,L"最新版本:\n"+s,L"操作完成", 0);
-			char t5[30];
-			sprintf(t5, "%0.2f GB", float(i_->needspace / static_cast<double>(1024) / 1024));
-			needspace->SetText(CString(t5));
+			pthread_t th; int* thread_ret = NULL;
+			pthread_create(&th, NULL, CMainWnd::ThreadFunc3, this);
 		}
 		if (msg.pSender->GetName() == _T("next2"))//下一步安装
 		{
+			first = false;
 			m_pStepTabLayout->SelectItem(2);
 			pthread_t th; int* thread_ret = NULL;
 			pthread_create(&th, NULL, CMainWnd::ThreadFunc,this);
@@ -347,6 +359,7 @@ void CMainWnd::Init()
 	next3 = static_cast<CButtonUI*>(m_pm.FindControl(_T("next3")));
 	next2 = static_cast<CButtonUI*>(m_pm.FindControl(_T("next2")));
 	list = static_cast<CListUI*>(m_pm.FindControl(_T("enr")));
+	speed = static_cast<CLabelUI*>(m_pm.FindControl(_T("speed")));
 	}
 #ifdef includejson
 	_parserjsonfile(t0,"\\file.ini");
@@ -363,6 +376,9 @@ void CMainWnd::Init()
 	dirchanged(true);
 	pthread_t th; int* thread_ret = NULL;
 	pthread_create(&th, NULL, CMainWnd::ThreadFunc2, this);
+	thread = new pthread_t;
+	//if(first)
+	pthread_create(thread, NULL, GetInternetSpeed, NULL);
 }
 void CMainWnd::InstallStart()
 {
@@ -416,6 +432,7 @@ check:
 	command += t0->execname;
 	//MessageBoxA(0, ("cmd /c \"" + command + "\"").c_str(), "Debug:", MB_OK);
 	system(("cmd /c \""+command+"\"").c_str());
+	Sleep(5500);
 	InstallFinished();
 }
 
@@ -424,4 +441,5 @@ void CMainWnd::InstallFinished()
 allowclose = 1;
 needdowload = false;
 next3->SetVisible(true);
+first = true;
 }

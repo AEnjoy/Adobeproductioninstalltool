@@ -21,6 +21,7 @@ using namespace std;
 #define ACCESS_WRITE 2 
 #define kDllName "extracting.dll" //7-zip dll
 void _parserjsonfile(iinfo*& a, const char* filename = "\\file.ini");
+void* GetInternetSpeed(void* arg);
 extern "C"{
 int _declspec(dllexport) Exfile(const char* filename, const char* outdir/*为空时解压在当前目录*/, std::string passwords /*NULL时没有密码*/);
 DWORD _declspec(dllexport) getwinverdwBuildNumber();
@@ -30,5 +31,6 @@ string _declspec(dllexport) WCharToMByte(LPCWSTR lpcwszStr);
 bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize,wstring& devicesname);
 wstring _declspec(dllexport) folder_open_dialog();
 BOOL _declspec(dllexport) ExeIsAdmin();
+wstring _declspec(dllexport) UTF8ToUnicode(const char* strSrc);
 //void _declspec(dllexport) ShowNotification(std::wstring& appName, std::wstring& firstLine);
 }

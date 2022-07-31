@@ -1,6 +1,7 @@
 #pragma once
 #include "..\duilib\Utils\WinImplBase.h"
 #include "installerinterface.h"
+#include "include/pthreads/pthread.h"
 #define TIMER_ID_PROGRESS (1000)
 class CWndUI : public CControlUI
 {
@@ -67,10 +68,13 @@ public:
 	void OnFinalMessage(HWND hWnd);
     void progress_();
     void environmental_inspection();
+    void checkp();
     void downloadpack();
     void dirchanged(bool once);
     CProgressUI* m_pProgressBar, * m_download;
+    CLabelUI* speed;
     iinfo* t0;
+    bool first=true;//点击开始安装会变为false
 private:
 	void Init();
     void InstallStart();
@@ -78,6 +82,7 @@ private:
     static void* ThreadFunc(void*);
     static void* ThreadFunc1(void* arg);
     static void* ThreadFunc2(void* arg);
+    static void* ThreadFunc3(void* arg);
     float t;//当前安装位置剩余空间
 private:
     //控件指针
@@ -91,6 +96,7 @@ private:
     string downloadurl;
     bool downloadfinishflag = false;
     bool needdowload = false;
+    pthread_t* thread;
     //wstring appname = L"Adobe Install Tool";
     //wstring info;
 };
