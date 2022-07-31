@@ -71,6 +71,7 @@ public:
     void checkp();
     void downloadpack();
     void dirchanged(bool once);
+    //HRESULT ShowProgressInTaskbar(HWND hwnd, __in ITaskbarList3* pTL);
     CProgressUI* m_pProgressBar, * m_download;
     CLabelUI* speed;
     iinfo* t0;

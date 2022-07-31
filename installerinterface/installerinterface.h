@@ -11,10 +11,13 @@
 #pragma comment(lib, "lib/libcrypto.lib")
 #pragma comment(lib, "lib/libssl.lib")
 #pragma comment(lib, "DXGI.lib")
+#pragma comment(lib,"Explorerframe.lib")
 using namespace DuiLib;
 //功能
 #include "include/releaseHelper.h"
 #include "include/download.h"
+#include "shobjidl.h"
+
 //#include "include/md5.h"
 
 #define includejson //资源含有json项

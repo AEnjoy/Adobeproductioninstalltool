@@ -53,7 +53,7 @@
     <ClCompile Include="Cmainwnd.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="install.cpp">
+    <ClCompile Include="api.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="releasefile.cpp">
