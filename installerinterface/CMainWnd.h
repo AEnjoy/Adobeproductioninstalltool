@@ -2,6 +2,7 @@
 #include "..\duilib\Utils\WinImplBase.h"
 #include "installerinterface.h"
 #include "include/pthreads/pthread.h"
+#include "framework.h"
 #define TIMER_ID_PROGRESS (1000)
 class CWndUI : public CControlUI
 {
@@ -71,6 +72,7 @@ public:
     void checkp();
     void downloadpack();
     void dirchanged(bool once);
+    progress* ProgressHelper;
     //HRESULT ShowProgressInTaskbar(HWND hwnd, __in ITaskbarList3* pTL);
     CProgressUI* m_pProgressBar, * m_download;
     CLabelUI* speed;

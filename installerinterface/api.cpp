@@ -62,7 +62,25 @@ string UnicodeToAnsi(const WCHAR* strSrc)
 
     return strRet;
 }
-
+/*文件是否存在*/
+BOOL FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter) {
+    WIN32_FIND_DATA fd;
+    HANDLE hFind = FindFirstFile(lpPath, &fd);
+    BOOL bFilter = (FALSE == dwFilter) ? TRUE : fd.dwFileAttributes & dwFilter;
+    BOOL RetValue = ((hFind != INVALID_HANDLE_VALUE) && bFilter) ? TRUE : FALSE;
+    FindClose(hFind);
+    return RetValue;
+}
+DWORD getwinverdwBuildNumber() //int such as 19041
+{
+    typedef void(__stdcall* NTPROC)(DWORD*, DWORD*, DWORD*);
+    HINSTANCE hinst = LoadLibrary(_T("ntdll.dll"));
+    DWORD dwMajor, dwMinor, dwBuildNumber;
+    NTPROC proc = (NTPROC)GetProcAddress(hinst, "RtlGetNtVersionNumbers");
+    proc(&dwMajor, &dwMinor, &dwBuildNumber);
+    FreeLibrary(hinst);
+    return dwBuildNumber;
+}
 string UTF8ToAnsi(const char* strSrc)
 {
     return UnicodeToAnsi(UTF8ToUnicode(strSrc).c_str());
@@ -219,4 +237,27 @@ LeaveIsAdmin:
     if (psdAdmin) LocalFree(psdAdmin);
     if (psidAdmin) FreeSid(psidAdmin);
     return bReturn;
+}
+progress::progress() {
+    m_hImageList = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 0, 0);
+}
+progress::~progress() {
+    ImageList_Destroy(m_hImageList);
+}
+void progress::Attach(HWND hWnd) {
+    m_hWnd = hWnd;
+	if (NULL == m_pTaskBarlist)
+	{
+		    CoCreateInstance(
+			CLSID_TaskbarList, NULL, CLSCTX_ALL,
+			IID_ITaskbarList3, (void**)&m_pTaskBarlist);
+	}
+	m_pTaskBarlist->SetProgressState(m_hWnd, TBPF_INDETERMINATE);
+}
+void progress::SetProgressValue(ULONGLONG ullCompleted, ULONGLONG ullTotal)
+{
+    m_pTaskBarlist->SetProgressValue(m_hWnd, ullCompleted, ullTotal);
+}
+void progress::SetProgressState(TBPFLAG tbpFlags = TBPF_NOPROGRESS) {
+    m_pTaskBarlist->SetProgressState(m_hWnd, TBPF_NOPROGRESS);
 }

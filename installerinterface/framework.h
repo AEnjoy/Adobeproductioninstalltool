@@ -34,3 +34,22 @@ BOOL _declspec(dllexport) ExeIsAdmin();
 wstring _declspec(dllexport) UTF8ToUnicode(const char* strSrc);
 //void _declspec(dllexport) ShowNotification(std::wstring& appName, std::wstring& firstLine);
 }
+class progress
+{
+	typedef struct tagTASKBARBUTTON {
+		HBITMAP		hBitmap;
+		wchar_t* szTip;
+		UINT		ID;
+	}TASKBARBUTTON;
+public:
+	progress();
+	~progress();
+private:
+	HIMAGELIST		m_hImageList;					// 按钮的图标
+	ITaskbarList3* m_pTaskBarlist;
+	HWND			m_hWnd;
+public:
+	void Attach(HWND hWnd);// 关联窗体
+	void SetProgressValue(ULONGLONG ullCompleted, ULONGLONG ullTotal);
+	void SetProgressState(TBPFLAG tbpFlags/* = TBPF_NOPROGRESS*/);
+};

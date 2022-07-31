@@ -12,25 +12,6 @@ using namespace std;
 extern int downloadprog;//下载进度
 int allowclose = 1;
 iinfo* i_= nullptr;
-/*文件是否存在*/
-BOOL FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter) {
-	WIN32_FIND_DATA fd;
-	HANDLE hFind = FindFirstFile(lpPath, &fd);
-	BOOL bFilter = (FALSE == dwFilter) ? TRUE : fd.dwFileAttributes & dwFilter;
-	BOOL RetValue = ((hFind != INVALID_HANDLE_VALUE) && bFilter) ? TRUE : FALSE;
-	FindClose(hFind);
-	return RetValue;
-}
-DWORD getwinverdwBuildNumber() //int such as 19041
-{
-	typedef void(__stdcall* NTPROC)(DWORD*, DWORD*, DWORD*);
-	HINSTANCE hinst = LoadLibrary(_T("ntdll.dll"));
-	DWORD dwMajor, dwMinor, dwBuildNumber;
-	NTPROC proc = (NTPROC)GetProcAddress(hinst, "RtlGetNtVersionNumbers");
-	proc(&dwMajor, &dwMinor, &dwBuildNumber);
-	FreeLibrary(hinst);
-	return dwBuildNumber;
-}
 static inline auto warningflag()->CControlUI* {
 	auto warnning = new CControlUI;//! 
 	warnning->SetMaxHeight(24);
@@ -65,7 +46,7 @@ void* CMainWnd::ThreadFunc(void* arg)
 	return nullptr;
 }
 void* CMainWnd::ThreadFunc1(void* arg)
-{
+{	
 	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
 	thiz->downloadpack();
 	return nullptr;
@@ -98,6 +79,7 @@ CMainWnd::CMainWnd()
 	,t0(NULL)
 	,list(nullptr)
 	,speed(nullptr)
+	, ProgressHelper(nullptr)
 {
 }
 
@@ -218,6 +200,7 @@ void CMainWnd::checkp()
 }
 void CMainWnd::downloadpack()
 {
+	ProgressHelper->SetProgressState(TBPF_NORMAL);
 	next3->SetVisible(false);
 	downLoad(32, downloadurl, t0->savename);
 	downloadfinishflag = true;
@@ -379,9 +362,12 @@ void CMainWnd::Init()
 	thread = new pthread_t;
 	//if(first)
 	pthread_create(thread, NULL, GetInternetSpeed, NULL);
+	ProgressHelper = new progress;
+	ProgressHelper->Attach(GetHWND());
 }
 void CMainWnd::InstallStart()
 {
+	ProgressHelper->SetProgressState(TBPF_INDETERMINATE);
 	next3->SetVisible(false);
 	allowclose = 0;//不允许关闭安装窗口
 	CString resfilename = t0->savename.c_str();
@@ -400,6 +386,7 @@ check:
 		)
 	{
 		MessageBoxW(GetHWND(), L"MD5检测失败或安装资源文件不存在,\n点击 ＂确定＂ 重新下载...", L"Error:", MB_ICONHAND);
+		ProgressHelper->SetProgressState(TBPF_ERROR);
 		needdowload = true;
 		DeleteFileW(resfilename);
 		pthread_t th; int* thread_ret = nullptr;
@@ -410,13 +397,6 @@ check:
 		//while (!downloadfinishflag);
 		//goto check;
 	}
-		
-	//MD5 md5;
-	//md5.reset();
-	//ifstream i(t0->savename);
-	//md5.update(i);
-
-
 #else
 	CString strPath;
 	GetModuleFileName(NULL, strPath.GetBufferSetLength(MAX_PATH + 1), MAX_PATH + 1);
@@ -442,4 +422,5 @@ allowclose = 1;
 needdowload = false;
 next3->SetVisible(true);
 first = true;
+ProgressHelper->SetProgressState(TBPF_NOPROGRESS);
 }

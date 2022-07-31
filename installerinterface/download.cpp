@@ -10,12 +10,15 @@
 #include "winsock.h"
 #include "iphlpapi.h"
 #include "framework.h"
+
 #pragma comment(lib,"Iphlpapi.lib")
 #pragma comment(lib,"lib/libcurl.lib")
 #pragma comment(lib,"lib/libpthread.lib")
 using namespace std;
 int downloadprog = 0;//下载进度
 static long fileLength;
+extern CMainWnd* pFrame;
+
 #define forcehttpspass(x) curl_easy_setopt(x, CURLOPT_SSL_VERIFYPEER, FALSE);
 struct tNode
 {
@@ -25,7 +28,7 @@ struct tNode
 	void* _curl;
 	pthread_t _tid;
 };
-struct progress {
+struct progress_ {
 	char* p;
 	size_t size;
 };
@@ -44,7 +47,7 @@ void* GetInternetSpeed(void* arg) {
 		m_pTable = (PMIB_IFTABLE)new BYTE[65535];
 	DWORD   dwLastIn = 0;//上一秒钟的接收字节数
 	DWORD   dwLastOut = 0;//上一秒钟的发送字节数
-	extern CMainWnd* pFrame;
+	
 	while (true)
 	{
 		GetIfTable(m_pTable, &m_dwAdapters, TRUE);
@@ -103,13 +106,14 @@ int assetsManagerProgressFunc(void* ptr, double totalToDownload, double nowDownl
 	{
 		downloadprog = (int)(nowDownloaded / totalToDownload * 100);
 	}
-	extern CMainWnd* pFrame; extern int allowclose;
+	extern int allowclose;
 	pFrame->m_download->SetValue(downloadprog);
 	if (/*speed != 0 && */allowclose == 0)
 	{
 		char downloadspeed[100];
 		sprintf(downloadspeed, "下载速度:%d Kb/s 总下载大小:%0.2f MB 总进度:%d%%", dwBandIn/10, 1.0 * pFrame->t0->zipspace / 1024, downloadprog);
 		pFrame->speed->SetText(CString(UTF8ToUnicode(downloadspeed).c_str()));
+		pFrame->ProgressHelper->SetProgressValue(downloadprog/2,100);
 	}
 	//printf("下载进度%0d%%\r", downloadprog); 
 	return 0;
@@ -212,7 +216,7 @@ bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, 
 		curl_easy_setopt(_curl, CURLOPT_PROGRESSFUNCTION, assetsManagerProgressFunc);//进度处理函数
 		/*************/
 		curl_easy_setopt(_curl, CURLOPT_NOPROGRESS, 0L);
-		struct progress data;
+		struct progress_ data;
 		curl_easy_setopt(_curl, CURLOPT_XFERINFODATA, &data);
 		curl_easy_setopt(_curl, CURLOPT_XFERINFOFUNCTION, assetsManagerProgressFunc);
 		/************/

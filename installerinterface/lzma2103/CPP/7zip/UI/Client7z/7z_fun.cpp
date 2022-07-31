@@ -375,6 +375,7 @@ STDMETHODIMP CArchiveExtractCallback::SetCompleted(const UInt64 *  completeValue
     extern CMainWnd* pFrame;
     int t = (*completeValue) * 100 / FileSize;
     pFrame->m_pProgressBar->SetValue(t);
+    pFrame->ProgressHelper->SetProgressValue(int(50 + t / 2), 100);
     return S_OK;
 }
 

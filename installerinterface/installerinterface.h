@@ -11,7 +11,7 @@
 #pragma comment(lib, "lib/libcrypto.lib")
 #pragma comment(lib, "lib/libssl.lib")
 #pragma comment(lib, "DXGI.lib")
-#pragma comment(lib,"Explorerframe.lib")
+//#pragma comment(lib,"Explorerframe.lib")
 using namespace DuiLib;
 //¹¦ÄÜ
 #include "include/releaseHelper.h"
