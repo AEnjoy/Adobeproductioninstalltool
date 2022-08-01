@@ -81,6 +81,15 @@ DWORD getwinverdwBuildNumber() //int such as 19041
     FreeLibrary(hinst);
     return dwBuildNumber;
 }
+int CountvAdapersMounts() {
+    IDXGIFactory* pFactory; IDXGIAdapter* pAdapter;
+    int iAdapterNum = 0;
+    HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
+    if (FAILED(hr))
+        return 0;
+    while (pFactory->EnumAdapters(iAdapterNum, &pAdapter) != DXGI_ERROR_NOT_FOUND)iAdapterNum++;
+    return iAdapterNum;
+}
 string UTF8ToAnsi(const char* strSrc)
 {
     return UnicodeToAnsi(UTF8ToUnicode(strSrc).c_str());
@@ -260,4 +269,13 @@ void progress::SetProgressValue(ULONGLONG ullCompleted, ULONGLONG ullTotal)
 }
 void progress::SetProgressState(TBPFLAG tbpFlags = TBPF_NOPROGRESS) {
     m_pTaskBarlist->SetProgressState(m_hWnd, TBPF_NOPROGRESS);
+}
+string& replace_all(string& src, const string& old_value, const string& new_value) {
+    for (string::size_type pos(0); pos != string::npos; pos += new_value.length()) {
+        if ((pos = src.find(old_value, pos)) != string::npos) {
+            src.replace(pos, old_value.length(), new_value);
+        }
+        else break;
+    }
+    return src;
 }

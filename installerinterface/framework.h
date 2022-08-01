@@ -22,6 +22,7 @@ using namespace std;
 #define kDllName "extracting.dll" //7-zip dll
 void _parserjsonfile(iinfo*& a, const char* filename = "\\file.ini");
 void* GetInternetSpeed(void* arg);
+string& replace_all(string& src, const string& old_value, const string& new_value);
 extern "C"{
 int _declspec(dllexport) Exfile(const char* filename, const char* outdir/*为空时解压在当前目录*/, std::string passwords /*NULL时没有密码*/);
 DWORD _declspec(dllexport) getwinverdwBuildNumber();
@@ -32,6 +33,7 @@ bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize,wstring& devicesnam
 wstring _declspec(dllexport) folder_open_dialog();
 BOOL _declspec(dllexport) ExeIsAdmin();
 wstring _declspec(dllexport) UTF8ToUnicode(const char* strSrc);
+int _declspec(dllexport) CountvAdapersMounts();
 //void _declspec(dllexport) ShowNotification(std::wstring& appName, std::wstring& firstLine);
 }
 class progress

@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <io.h>
 #include <direct.h>
+#include <fstream>
 using namespace std;
 extern int downloadprog;//下载进度
 int allowclose = 1;
@@ -168,12 +169,47 @@ void CMainWnd::environmental_inspection()
 	}
 	else {
 		char strsize[250];
-		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB 当前GPU:%s", memsize,  WCharToMByte(devicesname.c_str()).c_str());
+		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB 当前GPU:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
 		text2->SetText(L"I:显存充足");
 		text2->SetToolTip(CString(strsize));
 		pLine2->Add(acceptflag());
 	}
 	list->Add(pLine2);
+	WinExec("dxdiag /t info.txt",0);
+	while (access("info.txt", 0) != 0)Sleep(50);
+	SetFileAttributesW(L"info.txt", FILE_ATTRIBUTE_HIDDEN);
+	auto pLine3 = new CListContainerElementUI;
+	auto text3 = new CLabelUI; //text2->SetTextColor(0xff00ff00);
+	pLine3->SetTag(3);
+	pLine3->SetFixedHeight(24);
+	pLine3->Add(text3);
+	ifstream f; string li;
+	f.open("info.txt");
+	double cl=0.0;
+	for (int i = 0; i < CountvAdapersMounts(); i++) {
+		do {
+			if (!getline(f, li))break;
+		} while (li.find("DDI Version:") == string::npos);
+		li = replace_all(li, " ", "");
+		li = replace_all(li, "DDIVersion:", "");
+		auto t3=atof(li.c_str());
+		if (t3 > cl)cl = t3;
+	}
+	f.close();
+	remove("info.txt");
+	if (cl < 12) {
+		text3->SetText(L"W:GPU不受支持");
+		char strsize[250];
+		sprintf(strsize, "W:您的GPU不满足Adobe对于DirectX12(GPU至少一个)的需求,可能会出现兼容问题.当前GPU的DirectX版本:%0.2f", cl);
+		text3->SetToolTip(CString(strsize));
+		pLine3->Add(warningflag());
+	}
+	else {
+		text3->SetText(L"I:GPU兼容");
+		text3->SetToolTip(L"I:GPU满足(至少一个)兼容DirectX12.");
+		pLine3->Add(acceptflag());
+	}
+	list->Add(pLine3);
 }
 void CMainWnd::checkp()
 {
