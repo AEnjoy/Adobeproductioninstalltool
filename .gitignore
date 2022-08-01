@@ -2,7 +2,7 @@ ADMonSetup
 Debug
 duieditor
 Release
-7za.exe
+res.zip
 Release.7z
 .vs
 packages
@@ -10,3 +10,4 @@ package.zip
 res/project.dui
 installerinterface/include/wintoastlib.cpp
 installerinterface/include/wintoastlib.h
+*.aps

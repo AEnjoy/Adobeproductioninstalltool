@@ -5,7 +5,7 @@
 static const char* filepath = "file.ini";
 #pragma comment(lib,"ntdll.lib")
 CMainWnd* pFrame = new CMainWnd();
-
+LPBYTE g_lpResourceZIPBuffer = NULL;
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];            // 主窗口类名
@@ -17,66 +17,32 @@ inline  void  EnableMemLeakCheck(int Breakpoint = 0) {
 void InitResource()
 {
 	// 资源类型
-	//CPaintManagerUI::SetResourceType(UILIB_FILE);
+	CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
 	// 资源路径
-	//CPaintManagerUI::SetInstance(hInstance);
-	CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
-	CResourceManager::GetInstance()->LoadResource(_T("main.xml"), NULL);
-	CDuiString strResourcePath = CPaintManagerUI::GetInstancePath();
-	strResourcePath += _T("res\\");
-	CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
+	//CPaintManagerUI::SetResourcePath(CPaintManagerUI::GetInstancePath());
+	//CResourceManager::GetInstance()->LoadResource(_T("main.xml"), NULL);
+	//CDuiString strResourcePath = CPaintManagerUI::GetInstancePath();
+	//strResourcePath += _T("res\\");
+	//CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
 	//CDuiString strResourcePath = CPaintManagerUI::GetInstancePath();
 	// 加载资源
-	/*switch (CPaintManagerUI::GetResourceType())
+	HRSRC hResource = ::FindResource(CPaintManagerUI::GetResourceDll(), MAKEINTRESOURCE(IDR_FILE3), _T("FILE"));
+	if (hResource == NULL)return;
+	DWORD dwSize = 0;
+	HGLOBAL hGlobal = ::LoadResource(CPaintManagerUI::GetResourceDll(), hResource);
+	if (hGlobal == NULL)
 	{
-	case UILIB_FILE:
+		::FreeResource(hResource);return;
+	}
+	dwSize = ::SizeofResource(CPaintManagerUI::GetResourceDll(), hResource);
+	if (dwSize == 0)return;
+	g_lpResourceZIPBuffer = new BYTE[dwSize];
+	if (g_lpResourceZIPBuffer != NULL)
 	{
-		//strResourcePath += _T("res\\");
-		//CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
-		// 加载资源管理器
-		CResourceManager::GetInstance()->LoadResource(_T("main.xml"), NULL);
-		break;
+		::CopyMemory(g_lpResourceZIPBuffer, (LPBYTE)::LockResource(hGlobal), dwSize);
 	}
-	case UILIB_RESOURCE:
-	{
-		strResourcePath += _T("res\\");
-		CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
-		// 加载资源管理器
-		CResourceManager::GetInstance()->LoadResource(_T("IDR_RES"), _T("xml"));
-		break;
-	}
-	case UILIB_ZIP:
-	{
-		strResourcePath += _T("res\\");
-		CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
-		CPaintManagerUI::SetResourceZip(_T("res.zip"), true);
-		// 加载资源管理器
-		CResourceManager::GetInstance()->LoadResource(_T("main.xml"), NULL);
-		break;
-	}
-	case UILIB_ZIPRESOURCE:
-	{
-		strResourcePath += _T("res\\");
-		CPaintManagerUI::SetResourcePath(strResourcePath.GetData());
-
-		HRSRC hResource = ::FindResource(CPaintManagerUI::GetResourceDll(), _T("IDR_ZIPRES"), _T("ZIPRES"));
-		if (hResource != NULL) {
-			DWORD dwSize = 0;
-			HGLOBAL hGlobal = ::LoadResource(CPaintManagerUI::GetResourceDll(), hResource);
-			if (hGlobal != NULL) {
-				dwSize = ::SizeofResource(CPaintManagerUI::GetResourceDll(), hResource);
-				if (dwSize > 0) {
-					CPaintManagerUI::SetResourceZip((LPBYTE)::LockResource(hGlobal), dwSize);
-					// 加载资源管理器
-					CResourceManager::GetInstance()->LoadResource(_T("main.xml"), NULL);
-				}
-			}
-			::FreeResource(hResource);
-		}
-	}
-	break;
-	}
-*/
+	::FreeResource(hResource);
+	CPaintManagerUI::SetResourceZip(g_lpResourceZIPBuffer, dwSize);
 }
 
 auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -101,7 +67,7 @@ auto APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #endif // !DEBUG
 #endif // includejson
 	//releasehelper.FreeResFile(IDR_FILE2, "FILE", kDllName);
-	SetFileAttributesA(kDllName, FILE_ATTRIBUTE_HIDDEN);
+	//SetFileAttributesA(kDllName, FILE_ATTRIBUTE_HIDDEN);
 
 	pFrame->Create(NULL, _T("Installer"), UI_WNDSTYLE_DIALOG, 0L, 0, 0, 900, 600);
 	pFrame->CenterWindow();

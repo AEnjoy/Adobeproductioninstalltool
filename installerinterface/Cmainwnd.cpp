@@ -19,7 +19,7 @@ static inline auto warningflag()->CControlUI* {
 	warnning->SetMinHeight(24);
 	warnning->SetMaxWidth(24);
 	warnning->SetMinWidth(24);
-	warnning->SetBkImage(L"res\\warning.png");
+	warnning->SetBkImage(L"warning.png");
 	return warnning;
 }
 static inline auto errorflag()->CControlUI* {
@@ -28,7 +28,7 @@ static inline auto errorflag()->CControlUI* {
 	warnning->SetMinHeight(24);
 	warnning->SetMaxWidth(24);
 	warnning->SetMinWidth(24);
-	warnning->SetBkImage(L"res\\error.png");
+	warnning->SetBkImage(L"error.png");
 	return warnning;
 }
 static inline auto acceptflag()->CControlUI* {
@@ -37,7 +37,7 @@ static inline auto acceptflag()->CControlUI* {
 	warnning->SetMinHeight(24);
 	warnning->SetMaxWidth(24);
 	warnning->SetMinWidth(24);
-	warnning->SetBkImage(L"res\\accept.png");
+	warnning->SetBkImage(L"accept.png");
 	return warnning;
 }
 void* CMainWnd::ThreadFunc(void* arg)
@@ -82,18 +82,6 @@ CMainWnd::CMainWnd()
 	,speed(nullptr)
 	, ProgressHelper(nullptr)
 {
-}
-
-CDuiString CMainWnd::GetSkinFile()
-{
-	try
-	{
-		return CDuiString(_T("main.xml"));
-	}
-	catch (...)
-	{
-		throw "CMainWnd::GetSkinFile";
-	}
 }
 
 LPCTSTR CMainWnd::GetWindowClassName() const

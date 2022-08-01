@@ -49,8 +49,17 @@ class CMainWnd : public WindowImplBase
 public:
 
 	CMainWnd();
-	CDuiString GetSkinFile();
+    CDuiString GetSkinFile() {return CDuiString(_T("main.xml"));};
 	LPCTSTR GetWindowClassName() const;
+    virtual LPCTSTR GetResourceID() const
+    {
+        return MAKEINTRESOURCE(IDR_FILE3);
+    };
+    virtual UILIB_RESTYPE GetResourceType() const
+    {
+        return UILIB_ZIPRESOURCE;
+    };
+    CDuiString GetSkinFolder() { return _T(""); };
     virtual CControlUI* CreateControl(LPCTSTR pstrClassName)
     {
         //MessageBox(NULL, pstrClassName, pstrClassName,0);

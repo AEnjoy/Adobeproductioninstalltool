@@ -88,38 +88,9 @@ END
 //
 // FILE
 //
-IDR_FILE1               FILE                    "..\\package.zip"
+IDR_FILE1               FILE                    "..\\Release.7z"
 IDR_FILE2               FILE                    "..\\7za.exe"
-/*
-IDR_FILE1               FILE                    "..\\Debug\\DuiLib.dll"
-IDR_FILE2               FILE                    "..\\Debug\\extracting.dll"
-IDR_FILE3               FILE                    "..\\Debug\\file.ini"
-IDR_FILE4               FILE                    "..\\Debug\\installerinterface.exe" //install.exe
-IDR_FILE5               FILE                    "..\\Debug\\libcrypto-1_1.dll"
-IDR_FILE6               FILE                    "..\\Debug\\libcurl.dll"
-IDR_FILE7               FILE                    "..\\Debug\\libpthread.dll"
-IDR_FILE8               FILE                    "..\\Debug\\libssl-1_1.dll"
-IDR_FILE9               FILE                    "..\\Debug\\readme.txt"
-IDR_FILE10              FILE                    "..\\Debug\\res\\2.ico"
-IDR_FILE11              FILE                    "..\\Debug\\res\\2.png"
-IDR_FILE12              FILE                    "..\\Debug\\res\\bu.png"
-IDR_FILE13              FILE                    "..\\Debug\\res\\bu_1.png"
-IDR_FILE14              FILE                    "..\\Debug\\res\\close.png"
-IDR_FILE15              FILE                    "..\\Debug\\res\\close_1.png"
-IDR_FILE16              FILE                    "..\\Debug\\res\\main.xml"
-IDR_FILE17              FILE                    "..\\Debug\\res\\max.png"
-IDR_FILE18              FILE                    "..\\Debug\\res\\min.png"
-IDR_FILE19              FILE                    "..\\Debug\\res\\min_1.png"
-IDR_FILE20              FILE                    "..\\Debug\\res\\noselect.png"
-IDR_FILE21              FILE                    "..\\Debug\\res\\progressb.png"
-IDR_FILE22              FILE                    "..\\Debug\\res\\progressf.png"
-IDR_FILE23              FILE                    "..\\Debug\\res\\RC.png"
-IDR_FILE24              FILE                    "..\\Debug\\res\\restore.png"
-IDR_FILE25              FILE                    "..\\Debug\\res\\select.png"
-IDR_FILE26              FILE                    "..\\Debug\\res\\welcom.png"
-IDR_FILE27              FILE                    "..\\Debug\\res\\welcome_1.png"
-IDR_FILE28              FILE                    "..\\Debug\\res\\welcome_2.png"
-*/
+
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
 
