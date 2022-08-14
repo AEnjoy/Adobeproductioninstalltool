@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installerinterface", "installerinterface\installerinterface.vcxproj", "{2B37BD26-EFD7-4001-8329-8905E4BDD3DF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "installerinterface", "src\installerinterface.vcxproj", "{2B37BD26-EFD7-4001-8329-8905E4BDD3DF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnPack", "UnPack\UnPack.vcxproj", "{34C9C79C-1263-421F-B9EF-070C88E17E5B}"
 EndProject
