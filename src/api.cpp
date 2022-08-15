@@ -8,6 +8,7 @@
 #include <windows.h>
 #include <atlstr.h>
 #include <DXGI.h>
+#include <io.h>
 using namespace std;
 using namespace DuiLib;
 string WCharToMByte(LPCWSTR lpcwszStr)
@@ -63,13 +64,8 @@ string UnicodeToAnsi(const WCHAR* strSrc)
     return strRet;
 }
 /*文件是否存在*/
-BOOL FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter) {
-    WIN32_FIND_DATA fd;
-    HANDLE hFind = FindFirstFile(lpPath, &fd);
-    BOOL bFilter = (FALSE == dwFilter) ? TRUE : fd.dwFileAttributes & dwFilter;
-    BOOL RetValue = ((hFind != INVALID_HANDLE_VALUE) && bFilter) ? TRUE : FALSE;
-    FindClose(hFind);
-    return RetValue;
+bool FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter=0) {
+    return _waccess(lpPath, dwFilter) != -1;
 }
 DWORD getwinverdwBuildNumber() //int such as 19041
 {

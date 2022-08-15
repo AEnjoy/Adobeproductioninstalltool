@@ -3,7 +3,7 @@
 #include "CMainWnd.h"
 #define MAX_LOADSTRING 100
 static const char* filepath = "file.ini";
-#pragma comment(lib,"ntdll.lib")
+
 CMainWnd* pFrame = new CMainWnd();
 LPBYTE g_lpResourceZIPBuffer = NULL;
 HINSTANCE hInst;                                // 当前实例

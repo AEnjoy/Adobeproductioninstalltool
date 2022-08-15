@@ -26,7 +26,7 @@ string& replace_all(string& src, const string& old_value, const string& new_valu
 extern "C"{
 int _declspec(dllexport) Exfile(const char* filename, const char* outdir/*为空时解压在当前目录*/, std::string passwords /*NULL时没有密码*/);
 DWORD _declspec(dllexport) getwinverdwBuildNumber();
-BOOL _declspec(dllexport) FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter = FALSE);
+bool _declspec(dllexport) FindFirstFileExists(LPCTSTR lpPath, DWORD dwFilter = FALSE);
 int _declspec(dllexport) get_file_md5(const string& file_name, string& md5_value);
 string _declspec(dllexport) WCharToMByte(LPCWSTR lpcwszStr);
 bool _declspec(dllexport) isVmemorysatisfied(size_t& memsize,wstring& devicesname);

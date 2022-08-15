@@ -11,9 +11,6 @@
 #include "iphlpapi.h"
 #include "framework.h"
 
-#pragma comment(lib,"Iphlpapi.lib")
-#pragma comment(lib,"lib/libcurl.lib")
-#pragma comment(lib,"lib/libpthread.lib")
 using namespace std;
 int downloadprog = 0;//下载进度
 static long fileLength;

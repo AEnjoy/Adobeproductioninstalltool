@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,0,1
- PRODUCTVERSION 0,0,0,1
+ FILEVERSION 0,0,0,2
+ PRODUCTVERSION 0,0,0,2
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,13 +68,13 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "AEnjoy"
-            VALUE "FileDescription", "Advance Adobe Install Tool"
-            VALUE "FileVersion", "0.0.0.1"
+            VALUE "FileDescription", "Advance Adobe Install Tool(32 Bits)"
+            VALUE "FileVersion", "0.0.0.2"
             VALUE "InternalName", "AdobeInstallerToolUnpack.exe"
             VALUE "LegalCopyright", "Copyright (C) 2022"
             VALUE "OriginalFilename", "AdobeInstallerToolUnpack.exe"
-            VALUE "ProductName", "Advance Adobe Install Tool"
-            VALUE "ProductVersion", "0.0.0.1"
+            VALUE "ProductName", "Advance Adobe Install Tool(32 Bits)"
+            VALUE "ProductVersion", "0.0.0.2"
         END
     END
     BLOCK "VarFileInfo"
@@ -88,7 +88,9 @@ END
 //
 // FILE
 //
+
 IDR_FILE1               FILE                    "..\\Release.7z"
+
 IDR_FILE2               FILE                    "..\\7za.exe"
 
 #endif    // 中文(简体，中国) resources

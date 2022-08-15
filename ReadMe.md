@@ -1,5 +1,21 @@
 # What's this?
 
+> 1.这是一个使用duilib图形化库做的AdobePhotoshopCC和Premiere 安装程序的example.
+>
+> 2.项目引用了libcurl库,用于做从GitHub仓库下载"安装资源文件.7z"和检查仓库更新的功能,支持显示下载速度和进度.
+>
+> 3.项目使用了LZMA SDK用于解压缩.7z文件,并可以显示解压(安装)进度Callback.
+>
+> 4.项目使用了OpenSSL库以便提供https下载支持和MD5校验.
+>
+> 5.项目使用了较多的Win32API
+
+
+
+项目帮助/介绍/图片/代码说明->[点我](doc\readme.md)
+
+
+
 这个版本库收录了Adobe Photoshop 和 Premiere Pro的绿色版安装包,资源来自[zd423](https://www.423down.com/).
 
 除此之外,该版本库还包含了在线安装的相关配置文件
@@ -8,7 +24,7 @@
 
 
 
-目前已经上传了PS2022 23.0.1版本,其它绿色版本稍后上传
+目前已经上传了PS2022 23.0.1,PS23.1.1版本,其它绿色版本稍后上传
 
 项目使用宽松MIT协议分发,鼓励用于学习等用途
 

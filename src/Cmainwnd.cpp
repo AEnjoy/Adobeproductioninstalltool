@@ -44,20 +44,26 @@ static inline auto acceptflag()->CControlUI* {
 void* CMainWnd::ThreadFunc(void* arg)
 {
 	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
-	switch (funcflag){
-	case 0:thiz->InstallStart(); break;
-	case 1:thiz->downloadpack(); break;
-	case 2:thiz->environmental_inspection(); break;
-	case 3: {
-		MessageBoxA(0, "正在检查云端更新...", "Info:", MB_ICONINFORMATION); 
-		thiz->checkp();
-		break;
-	}
-	default:
-		break;
-	}
-	funcflag = -1;
-	//delete thiz;
+	thiz->InstallStart();
+	return nullptr;
+}
+void* CMainWnd::ThreadFunc1(void* arg)
+{
+	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
+	thiz->downloadpack();
+	return nullptr;
+}
+void* CMainWnd::ThreadFunc2(void* arg)
+{
+	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
+	thiz->environmental_inspection();
+	return nullptr;
+}
+void* CMainWnd::ThreadFunc3(void* arg)
+{
+	CMainWnd* thiz = static_cast<CMainWnd*>(arg);
+	MessageBoxA(0, "正在检查云端更新...", "Info:", MB_ICONINFORMATION);
+	thiz->checkp();
 	return nullptr;
 }
 CMainWnd::CMainWnd()
@@ -145,21 +151,35 @@ void CMainWnd::environmental_inspection()
 	if (!isVmemorysatisfied(memsize, devicesname))
 	{
 		char strsize[250];
-		sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需(或未安装显卡驱动),可能无法使用某些功能.当前显存为:%dMB 设备描述:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#ifdef _WIN64
+		sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需(或未安装显卡驱动),可能无法使用某些功能.当前显存为:%lldMB 设备描述:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#else
+sprintf(strsize, "W:您当前电脑所使用的显卡(核显)(最低)未满足PS最低显存所需(或未安装显卡驱动),可能无法使用某些功能.当前显存为:%dMB 设备描述:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#endif // _WIN64
 		text2->SetText(L"W:显存不足");
 		text2->SetToolTip(CString(strsize));
 		pLine2->Add(warningflag());
 	}
 	else {
 		char strsize[250];
-		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB 当前GPU:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#ifdef _WIN64
+		sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%lldMB 当前GPU:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#else
+sprintf(strsize, "I:显卡(核显)(最低)满足PS最低显存所需.当前显存为:%dMB 当前GPU:%s", memsize, WCharToMByte(devicesname.c_str()).c_str());
+#endif
+		
 		text2->SetText(L"I:显存充足");
 		text2->SetToolTip(CString(strsize));
 		pLine2->Add(acceptflag());
 	}
 	list->Add(pLine2);
+#ifndef _WIN64
+#ifdef _WIN64
+	WinExec("cmd /c %windir%\SysWOW64\dxdiag.exe /t info.txt",0);
+#else
 	WinExec("dxdiag /t info.txt",0);
 	while (access("info.txt", 0) != 0)Sleep(50);
+#endif
 	SetFileAttributesW(L"info.txt", FILE_ATTRIBUTE_HIDDEN);
 	auto pLine3 = new CListContainerElementUI;
 	auto text3 = new CLabelUI; //text2->SetTextColor(0xff00ff00);
@@ -193,6 +213,7 @@ void CMainWnd::environmental_inspection()
 		pLine3->Add(acceptflag());
 	}
 	list->Add(pLine3);
+#endif // !_WIN64
 }
 void CMainWnd::checkp()
 {
@@ -224,7 +245,7 @@ void CMainWnd::downloadpack()
 	downLoad(32, downloadurl, t0->savename);
 	downloadfinishflag = true;
 	pthread_t th; int* thread_ret = NULL;
-	funcflag = 0;
+	//funcflag = 0;
 	pthread_create(&th, NULL, CMainWnd::ThreadFunc, this);
 }
 void CMainWnd::dirchanged(bool once)
@@ -289,7 +310,7 @@ void CMainWnd::Notify(TNotifyUI& msg)
 		if (msg.pSender->GetName() == _T("checkp")) {
 			pthread_t th; int* thread_ret = NULL;
 			funcflag = 3;
-			pthread_create(&th, NULL, CMainWnd::ThreadFunc, this);
+			pthread_create(&th, NULL, CMainWnd::ThreadFunc3, this);
 		}
 		if (msg.pSender->GetName() == _T("next2"))//下一步安装
 		{
@@ -382,7 +403,7 @@ void CMainWnd::Init()
 	dirchanged(true);
 	pthread_t th; int* thread_ret = NULL;
 	funcflag = 2;
-	pthread_create(&th, NULL, CMainWnd::ThreadFunc, this);
+	pthread_create(&th, NULL, CMainWnd::ThreadFunc2, this);
 	thread = new pthread_t;
 	//if(first)
 	pthread_create(thread, NULL, GetInternetSpeed, NULL);
@@ -416,7 +437,7 @@ check:
 		DeleteFileW(resfilename);
 		pthread_t th; int* thread_ret = nullptr;
 		funcflag = 1;
-		pthread_create(&th, NULL, CMainWnd::ThreadFunc, this);
+		pthread_create(&th, NULL, CMainWnd::ThreadFunc1, this);
 		next3->SetVisible(true);
 		return;
 		//pthread_join(th, (void**)&thread_ret);

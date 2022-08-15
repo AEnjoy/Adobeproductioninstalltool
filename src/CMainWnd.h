@@ -92,6 +92,9 @@ private:
     void InstallStart();
 	void InstallFinished();
     static void* ThreadFunc(void*);
+    static void* ThreadFunc1(void* arg);
+    static void* ThreadFunc2(void* arg);
+    static void* ThreadFunc3(void* arg);
     float t;//当前安装位置剩余空间
 private:
     //控件指针

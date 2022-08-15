@@ -37,5 +37,8 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="..\Release.7z" />
+    <None Include="..\7zr.exe" />
+    <None Include="..\7za.exe" />
   </ItemGroup>
 </Project>

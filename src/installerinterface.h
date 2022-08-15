@@ -7,10 +7,23 @@
 //#define _AFXDLL
 #include "resource.h"
 #include "..\duilib\UIlib.h"
+#ifdef _WIN64
+#pragma comment(lib, "lib64/DuiLib.lib")//x86
+#pragma comment(lib, "lib64/libcrypto.lib")
+#pragma comment(lib, "lib64/libssl.lib")
+#pragma comment(lib,"lib64/libcurl.lib")
+#pragma comment(lib,"lib64/libpthread.lib")
+#else
 #pragma comment(lib, "../duilib/DuiLib.lib")//x86
 #pragma comment(lib, "lib/libcrypto.lib")
 #pragma comment(lib, "lib/libssl.lib")
+#pragma comment(lib,"lib/libcurl.lib")
+#pragma comment(lib,"lib/libpthread.lib")
+#endif
 #pragma comment(lib, "DXGI.lib")
+#pragma comment(lib,"ntdll.lib")
+#pragma comment(lib,"Iphlpapi.lib")
+
 //#pragma comment(lib,"Explorerframe.lib")
 using namespace DuiLib;
 //¹¦ÄÜ

@@ -135,6 +135,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)install_x64.exe</OutputFile>
+      <AdditionalOptions> /ltcg /VERSION:10.00 /SUBSYSTEM:CONSOLE,5.02 /OSVERSION:10.00 /NXCOMPAT %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -148,6 +150,9 @@
     <ResourceCompile Include="UnPack.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\7za.exe" />
+    <None Include="..\7zr.exe" />
+    <None Include="..\Release.7z" />
     <None Include="file1.bin" />
     <None Include="packages.config" />
   </ItemGroup>
