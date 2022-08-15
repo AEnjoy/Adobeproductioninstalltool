@@ -22,7 +22,7 @@
 
 ## 项目相关代码文件说明:
 
-### [api.cpp](..\src\api.cpp)
+### [api.cpp](../src/api.cpp)
 
 提供部分功能供程序内外使用
 
@@ -56,7 +56,7 @@ string& replace_all(string& src, const string& old_value, const string& new_valu
 class progress;
 ```
 
-### [Cmainwnd.cpp](..\src\Cmainwnd.cpp)
+### [Cmainwnd.cpp](../src/Cmainwnd.cpp)
 
 duilib主窗口类的相关代码
 
@@ -103,7 +103,7 @@ void CMainWnd::InstallStart();
 void CMainWnd::InstallFinished();
 ```
 
-### [download.cpp](..\src\download.cpp)
+### [download.cpp](../src/download.cpp)
 
 libcurl多线程下载\显示下载速度\下载进度api
 
@@ -132,13 +132,13 @@ void* workThread(void* pData);
 bool downLoad(int threadNum, std::string _packageUrl, std::string _storagePath, bool show);
 ```
 
-### [main.cpp](..\src\main.cpp)
+### [main.cpp](../src/main.cpp)
 
 程序的主入口
 
 包含duilib库资源初始化
 
-### [openssl_lib.cpp](..\src\openssl_lib.cpp)
+### [openssl_lib.cpp](../src/openssl_lib.cpp)
 
 openssl库中本项目所需的API
 
@@ -147,7 +147,7 @@ openssl库中本项目所需的API
 extern "C" int get_file_md5(const string & file_name, string & md5_value);
 ```
 
-### [releasefile.cpp](..\src\releasefile.cpp)
+### [releasefile.cpp](../src/releasefile.cpp)
 
 功能:从res中释放文件
 
@@ -155,7 +155,7 @@ extern "C" int get_file_md5(const string & file_name, string & md5_value);
 bool CReleaseDLL::FreeResFile(unsigned long m_lResourceID, const char* m_strResourceType, const char* m_strFileName);
 ```
 
-### [framework.h](..\src\framework.h)
+### [framework.h](../src/framework.h)
 
 用于声明导出的函数和一些杂项配置
 
@@ -175,7 +175,7 @@ extern "C"{
 }
 ```
 
-### [installerinterface.h](..\src\installerinterface.h)
+### [installerinterface.h](../src/installerinterface.h)
 
 包含了配置项参数结构体的声明,外部lib的comment和部分杂项配置
 
